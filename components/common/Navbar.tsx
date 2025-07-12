@@ -1,7 +1,6 @@
 "use client";
 
 import { LogOut, Moon, Settings, Sun, User } from "lucide-react";
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
     DropdownMenu,
@@ -24,7 +23,6 @@ const Navbar = () => {
             <SidebarTrigger />
             {/* RIGHT */}
             <div className="flex items-center gap-4">
-                <Link href="/">Dashboard</Link>
                 {/* THEME MENU */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

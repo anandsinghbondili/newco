@@ -2,9 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // For backward compatibility (deprecated but still works)
-    domains: ['images.pexels.com'],
-
     // Recommended approach for Next.js 12+
     remotePatterns: [
       {

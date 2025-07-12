@@ -1,0 +1,67 @@
+[
+    {
+        "title": "Access Control",
+        "items": [
+            {
+                "routeId": "setupUsers",
+                "label": "Define Users",
+                "icon": "User"
+            }
+        ]
+    },
+    {
+        "title": "Deal Setup",
+        "items": [
+            {
+                "routeId": "dealTypes",
+                "label": "Deal Type",
+                "icon": "Handshake"
+            }
+        ]
+    },
+    {
+        "title": "Common Setup",
+        "items": [
+            {
+                "routeId": "lookups",
+                "label": "Lookups",
+                "icon": "Search"
+            },
+            {
+                "routeId": "statusRules",
+                "label": "Status Transition",
+                "icon": "GitBranch"
+            },
+            {
+                "routeId": "divisions",
+                "label": "Divisions",
+                "icon": "Layers"
+            }
+        ]
+    },
+    {
+        "title": "Configure",
+        "items": [
+            {
+                "routeId": "customSections",
+                "label": "Sections",
+                "icon": "LayoutGrid"
+            }
+        ]
+    },
+    {
+        "title": "Claim Setup",
+        "items": [
+            {
+                "routeId": "claimTypes",
+                "label": "Claim Types",
+                "icon": "ListChecks"
+            },
+            {
+                "routeId": "claimReasons",
+                "label": "Claim Reasons",
+                "icon": "HelpCircle"
+            }
+        ]
+    }
+]

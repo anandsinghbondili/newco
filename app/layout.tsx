@@ -1,4 +1,5 @@
 
+import { Toaster } from "sonner";
 import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -22,7 +23,9 @@ export default function LoginLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}</body>
+        {children}
+        <Toaster position="top-right" richColors />
+      </body>
     </html >
   );
 }
