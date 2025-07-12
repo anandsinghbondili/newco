@@ -1,10 +1,10 @@
 import React from "react";
-import SampleForm from "./(examples)/(forms)/page";
+import LoginPage from "./login/page";
 
 export default function Home() {
   return (
     <main>
-      <SampleForm />
+      <LoginPage />
     </main>
   );
 }
