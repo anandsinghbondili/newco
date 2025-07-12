@@ -11,6 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { showErrorToast, showSuccessToast } from "@/components/ext/window/Toaster"; // fixed casing
+import { Card } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 type User = {
     id: string;
@@ -63,16 +65,13 @@ export default function LoginPage() {
 
             <div className="w-full max-w-md mt-8">
                 {loading ? (
-                    // ✅ Load mask here
-                    <div className="flex items-center justify-center rounded-xl border border-gray-300 bg-white p-12 shadow-md">
-                        <div className="flex items-center gap-4 text-gray-500">
-                            <svg className="animate-spin h-6 w-6 text-blue-600" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                            </svg>
+                    // ✅ Load mask using ShadCN components
+                    <Card className="flex items-center justify-center p-12">
+                        <div className="flex items-center gap-4 text-muted-foreground">
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
                             <span className="text-lg font-medium">Logging in... Please wait.</span>
                         </div>
-                    </div>
+                    </Card>
                 ) : (
                     // 🔐 Login Form
                     <form

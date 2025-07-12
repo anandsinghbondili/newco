@@ -3,7 +3,7 @@
         "title": "Access Control",
         "items": [
             {
-                "routeId": "setupUsers",
+                "routeId": "underprogress",
                 "label": "Define Users",
                 "icon": "User"
             }
@@ -13,7 +13,7 @@
         "title": "Deal Setup",
         "items": [
             {
-                "routeId": "dealTypes",
+                "routeId": "underprogress",
                 "label": "Deal Type",
                 "icon": "Handshake"
             }
@@ -23,12 +23,12 @@
         "title": "Common Setup",
         "items": [
             {
-                "routeId": "lookups",
+                "routeId": "underprogress",
                 "label": "Lookups",
                 "icon": "Search"
             },
             {
-                "routeId": "statusRules",
+                "routeId": "underprogress",
                 "label": "Status Transition",
                 "icon": "GitBranch"
             },
@@ -43,7 +43,7 @@
         "title": "Configure",
         "items": [
             {
-                "routeId": "customSections",
+                "routeId": "underprogress",
                 "label": "Sections",
                 "icon": "LayoutGrid"
             }
@@ -53,12 +53,12 @@
         "title": "Claim Setup",
         "items": [
             {
-                "routeId": "claimTypes",
+                "routeId": "underprogress",
                 "label": "Claim Types",
                 "icon": "ListChecks"
             },
             {
-                "routeId": "claimReasons",
+                "routeId": "underprogress",
                 "label": "Claim Reasons",
                 "icon": "HelpCircle"
             }

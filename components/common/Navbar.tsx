@@ -13,9 +13,24 @@ import {
 import { Button } from "../ui/button";
 import { useTheme } from "next-themes";
 import { SidebarTrigger } from "../ui/sidebar";
+import { showSuccessToast } from "../ext/window/Toaster";
 
 const Navbar = () => {
     const { setTheme } = useTheme();
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        sessionStorage.clear();
+
+        showSuccessToast("Logout successful");
+
+        setTimeout(
+            () => {
+                window.location.href = "/";
+            },
+            500
+        );
+    };
 
     return (
         <nav className="p-4 flex items-center justify-between sticky top-0 bg-background z-10">
@@ -63,7 +78,10 @@ const Navbar = () => {
                             <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
                             Settings
                         </DropdownMenuItem>
-                        <DropdownMenuItem variant="destructive">
+                        <DropdownMenuItem
+                            onClick={handleLogout}
+                            className="text-red-600 focus:bg-red-50 dark:focus:bg-red-900/30"
+                        >
                             <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
                             Logout
                         </DropdownMenuItem>
