@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ExtendedGrid from "@/components/ext/grid/ExtendedGrid";
 import { ColumnDef } from "@tanstack/react-table";
 import { Panel } from "@/components/ext/containers/Panel";
+import { showCustomToast, showSuccessToast } from "@/components/ext/window/Toaster";
 
 interface Deal {
     deal_number: string;
@@ -56,6 +57,7 @@ export default function DealSummaryPage() {
                 columns={columns}
                 data={data}
                 enableFilters={false}
+                onRefresh={() => showCustomToast("info", "Info", "Refreshed data")}
             />
         </Panel>
     );

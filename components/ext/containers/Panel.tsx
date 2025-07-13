@@ -30,7 +30,7 @@ export const Panel: React.FC<PanelProps> = ({
         <Card className={cn('grid grid-cols-1 gap-4 p-3 h-full', className)}>
             {/* Title */}
             {title && (
-                <h2 className="text-xl font-semibold mb-1">{title}</h2>
+                <h2 className="text-xl font-semibold mb-1 shrink-0">{title}</h2>
             )}
 
             {/* Tbar */}
@@ -78,6 +78,6 @@ export const Panel: React.FC<PanelProps> = ({
             <CardContent className="min-h-0 overflow-auto p-0 flex-1">
                 {children}
             </CardContent>
-        </Card>
+        </Card >
     )
 }

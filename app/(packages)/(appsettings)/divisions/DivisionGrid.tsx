@@ -2,6 +2,7 @@
 
 import ExtendedGrid from "@/components/ext/grid/ExtendedGrid";
 import { ColumnDef } from "@tanstack/react-table";
+import DivisionsPage from "./page";
 
 /** Shape of one record in Divisions.json */
 export interface DivisionRow {
@@ -52,6 +53,9 @@ export default function DivisionGrid({
             onRowSelectionChange={(state) => {
                 const first = Object.keys(state ?? {})[0];
                 onRowSelect(first ? Number(first.split("_")[0]) : null);
+            }}
+            onRefresh={() => {
+                DivisionsPage.fetchData(); // Fixed typo in variable name
             }}
         />
     );

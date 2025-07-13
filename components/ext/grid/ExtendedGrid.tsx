@@ -43,6 +43,7 @@ import {
     MoreVertical,
     Settings,
     Menu,
+    RefreshCcw,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -77,6 +78,8 @@ interface ExtendedGridProps<T> {
     height?: string;
     width?: string;
     className?: string;
+    onRowDoubleClick?: (record: T) => void;
+    onRefresh?: () => void;
 }
 
 export function ExtendedGrid<T>({
@@ -99,6 +102,8 @@ export function ExtendedGrid<T>({
     height = "100%",
     width = "100%",
     className = "",
+    onRowDoubleClick,
+    onRefresh,
 }: ExtendedGridProps<T>) {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -240,6 +245,24 @@ export function ExtendedGrid<T>({
                 <h2 className="text-lg md:text-xl font-semibold truncate">{title}</h2>
 
                 <div className="flex flex-wrap gap-2">
+                    {/* Add this refresh button */}
+                    {onRefresh && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={onRefresh}
+                            className="h-8"
+                        >
+                            {isMobile ? (
+                                <RefreshCcw className="h-4 w-4" />
+                            ) : (
+                                <>
+                                    <RefreshCcw className="h-4 w-4 mr-2" />
+                                    Refresh
+                                </>
+                            )}
+                        </Button>
+                    )}
                     {/* Search */}
                     {enableFilters && (
                         <div className="relative flex-1 min-w-[150px] max-w-[300px]">
@@ -314,7 +337,7 @@ export function ExtendedGrid<T>({
                 )}
             >
                 <Table className="w-full">
-                    <TableHeader className="sticky top-0 bg-background z-10">
+                    <TableHeader className="sticky top-0 bg-background z-10 shadow-sm border-b">
                         {table.getHeaderGroups().map((hg) => (
                             <TableRow key={hg.id}>
                                 {hg.headers.map((header) => {
@@ -324,7 +347,7 @@ export function ExtendedGrid<T>({
                                     // Selection column gets fixed styles
                                     if (header.column.id === "__select") {
                                         return (
-                                            <TableHead key={header.id} className="sticky left-0 z-20 bg-background w-20 max-w-[33px]">
+                                            <TableHead key={header.id} className="sticky left-0 z-20 bg-background w-20 min-w-[33px] max-w-[33px]">
                                                 {flexRender(header.column.columnDef.header, header.getContext())}
                                             </TableHead>
                                         );
@@ -335,7 +358,9 @@ export function ExtendedGrid<T>({
                                             key={header.id}
                                             onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                                             className={cn(
-                                                "relative group",
+                                                "relative group px-3 py-2", // 📦 padding
+                                                "bg-muted/30",              // 💡 slight background
+                                                "text-xs font-semibold uppercase", // 🧑‍🎓 clearer header text
                                                 canSort && "cursor-pointer",
                                                 header.column.getIsPinned() && "sticky bg-background",
                                                 isMobile && "min-w-[120px]"
@@ -389,8 +414,9 @@ export function ExtendedGrid<T>({
                                                     type="text"
                                                     placeholder="Filter..."
                                                     value={(header.column.getFilterValue() as string) ?? ""}
+                                                    onClick={(e) => e.stopPropagation()} // 🛠️ This is key
                                                     onChange={(e) => header.column.setFilterValue(e.target.value)}
-                                                    className="mt-1 h-8 w-full"
+                                                    className="mt-2 h-8 w-full rounded-sm bg-white text-sm"
                                                 />
                                             )}
                                             {enableColumnResizing && !isMobile && (
@@ -412,6 +438,7 @@ export function ExtendedGrid<T>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    onDoubleClick={() => onRowDoubleClick?.(row.original)}
                                     className={cn(
                                         hoverable && "hover:bg-muted/50",
                                         striped && "even:bg-muted/10",
@@ -421,7 +448,7 @@ export function ExtendedGrid<T>({
                                     {row.getVisibleCells().map((cell) => {
                                         if (cell.column.id === "__select") {
                                             return (
-                                                <TableCell key={cell.id} className="sticky left-0 z-20 bg-background w-20  max-w-[33px]">
+                                                <TableCell key={cell.id} className="sticky left-0 z-20 bg-background w-20 min-w-[33px] max-w-[33px]">
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
                                             );
@@ -453,36 +480,38 @@ export function ExtendedGrid<T>({
             </div>
 
             {/* Pagination ----------------------------------------------- */}
-            {enablePagination && (
-                <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
-                    <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()} className="h-8 w-8 p-0"><ChevronFirst className="h-4 w-4" /></Button>
-                        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="h-8 w-8 p-0"><ChevronLeft className="h-4 w-4" /></Button>
-                        <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="h-8 w-8 p-0"><ChevronRight className="h-4 w-4" /></Button>
-                        <Button variant="outline" size="sm" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()} className="h-8 w-8 p-0"><ChevronLast className="h-4 w-4" /></Button>
-                    </div>
-                    <div className="flex flex-col md:flex-row items-center gap-2">
-                        <span className="text-sm">Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm hidden md:inline">Go to page:</span>
-                            <Input type="number" defaultValue={table.getState().pagination.pageIndex + 1} onChange={(e) => table.setPageIndex(e.target.value ? Number(e.target.value) - 1 : 0)} className="w-16 h-8" />
+            {
+                enablePagination && (
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
+                        <div className="flex items-center space-x-2">
+                            <Button variant="outline" size="sm" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()} className="h-8 w-8 p-0"><ChevronFirst className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="h-8 w-8 p-0"><ChevronLeft className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="h-8 w-8 p-0"><ChevronRight className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()} className="h-8 w-8 p-0"><ChevronLast className="h-4 w-4" /></Button>
                         </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm" className="h-8">Show {table.getState().pagination.pageSize}</Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                {[10, 20, 30, 40, 50].map((size) => (
-                                    <DropdownMenuItem key={size} onClick={() => table.setPageSize(size)}>
-                                        Show {size}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex flex-col md:flex-row items-center gap-2">
+                            <span className="text-sm">Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm hidden md:inline">Go to page:</span>
+                                <Input type="number" defaultValue={table.getState().pagination.pageIndex + 1} onChange={(e) => table.setPageIndex(e.target.value ? Number(e.target.value) - 1 : 0)} className="w-16 h-8" />
+                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="h-8">Show {table.getState().pagination.pageSize}</Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    {[10, 20, 30, 40, 50].map((size) => (
+                                        <DropdownMenuItem key={size} onClick={() => table.setPageSize(size)}>
+                                            Show {size}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
 

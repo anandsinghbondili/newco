@@ -78,7 +78,7 @@ export default function DynamicSidebarFooter() {
                                     {/* Items under group */}
                                     {section.items.map((item) => (
                                         <DropdownMenuItem asChild key={item.routeId}>
-                                            <Link href={`/${item.routeId}`} className="flex items-center gap-2">
+                                            <Link href={`/${item.routeId}`} className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors">
                                                 {item.label}
                                             </Link>
                                         </DropdownMenuItem>

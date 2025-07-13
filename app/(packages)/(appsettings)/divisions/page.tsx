@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import DivisionGrid, { DivisionRow } from "./DivisionGrid";
 import { deleteDivision } from "./actions";
 import { Panel } from "@/components/ext/containers/Panel";
@@ -16,29 +16,47 @@ export default function DivisionsPage() {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [formMode, setFormMode] = useState<"create" | "edit">("create");
 
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch("http://localhost:5050/api/divisions");
+            if (!response.ok) throw new Error("Failed to fetch divisions");
+            const data = await response.json();
+            setRows(data);
+        } catch (error) {
+            console.error("Error fetching divisions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        fetch("/data/AppSettings/Common/Divisions.json")
-            .then((r) => r.json())
-            .then((j) => {
-                setRows(j.data);
-                setLoading(false);
-            })
-            .catch(() => setLoading(false));
+        fetchData();
     }, []);
 
     const handleDelete = async () => {
         if (!selectedId) return;
-        await deleteDivision(selectedId);
-        setRows((prev) => prev.filter((r) => r.id !== selectedId));
-        setSelectedId(null);
-        setShowDeleteDialog(false);
+        try {
+            await deleteDivision(selectedId);
+            setRows(prev => prev.filter(r => r.id !== selectedId));
+            setSelectedId(null);
+        } catch (error) {
+            console.error("Error deleting division:", error);
+        } finally {
+            setShowDeleteDialog(false);
+        }
     };
 
-    const handleFormSubmit = (values: any) => {
-        console.log("Form submitted:", values);
-        // Add your create/update logic here
-        setShowFormDialog(false);
-        // Refresh data or update local state
+    const handleFormSubmit = async (values: any) => {
+        try {
+            console.log("Form submitted:", values);
+            // Add your create/update logic here
+            await fetchData(); // Refresh data after form submission
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        } finally {
+            setShowFormDialog(false);
+        }
     };
 
     const openCreateForm = () => {
@@ -55,8 +73,7 @@ export default function DivisionsPage() {
     const selectedDivision = rows.find(r => r.id === selectedId);
 
     if (loading) {
-        // return <div>Loading...</div>;
-        <Loading />
+        return <Loading />;
     }
 
     return (
@@ -70,25 +87,19 @@ export default function DivisionsPage() {
                 <DivisionGrid
                     data={rows}
                     onRowSelect={setSelectedId}
-                    selectedId={selectedId}
+                    onRefresh={fetchData}  // Added refresh functionality
                 />
             </Panel>
 
             {/* Form Dialog */}
             {showFormDialog && (
-                <ConfirmDialog
-                    open={true}
-                    onConfirm={() => setShowFormDialog(false)}
-                    title={formMode === "create" ? "Create Division" : "Edit Division"}
-                    description=""
-                    confirmLabel="Save"
-                    cancelLabel="Cancel"
-                >
-                    <DivisionForm
-                        defaultValues={formMode === "edit" ? selectedDivision : undefined}
-                        onSubmit={handleFormSubmit}
-                    />
-                </ConfirmDialog>
+                <DivisionForm
+                    open={showFormDialog}
+                    onClose={() => setShowFormDialog(false)}
+                    onSubmit={handleFormSubmit}
+                    mode={formMode}
+                    initialValues={formMode === "edit" ? selectedDivision : undefined}
+                />
             )}
 
             {/* Delete Confirmation Dialog */}
