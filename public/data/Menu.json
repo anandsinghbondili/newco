@@ -16,6 +16,11 @@
                 "routeId": "billbacks",
                 "label": "Billback",
                 "icon": "BadgeDollarSign"
+            },
+            {
+                "routeId": "tracing",
+                "label": "Tracing",
+                "icon": "BadgeDollarSign"
             }
         ]
     },

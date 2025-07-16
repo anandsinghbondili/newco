@@ -16,6 +16,11 @@
                 "routeId": "underprogress",
                 "label": "Deal Type",
                 "icon": "Handshake"
+            },
+            {
+                "routeId": "performance",
+                "label": "Performance Type",
+                "icon": "Handshake"
             }
         ]
     },

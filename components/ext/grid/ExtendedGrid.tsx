@@ -148,6 +148,24 @@ export function ExtendedGrid<T>({
     const [columnResizeMode, setColumnResizeMode] = React.useState<ColumnResizeMode>("onChange");
     const [globalFilter, setGlobalFilter] = React.useState("");
 
+    /* ------------------------------------------------------------------ */
+    /* Settings state                                                     */
+    /* ------------------------------------------------------------------ */
+    const [settings, setSettings] = React.useState({
+        enableSorting,
+        enableFilters,
+        enableSearch: enableFilters, // Search is part of filters
+    });
+
+    // Update table settings when props change
+    React.useEffect(() => {
+        setSettings({
+            enableSorting,
+            enableFilters,
+            enableSearch: enableFilters,
+        });
+    }, [enableSorting, enableFilters]);
+
     // keep columnOrder synced with columns prop changes
     React.useEffect(() => {
         setColumnOrder(
@@ -182,19 +200,19 @@ export function ExtendedGrid<T>({
             columnVisibility,
             columnOrder,
             columnPinning,
-            globalFilter,
+            globalFilter: settings.enableSearch ? globalFilter : undefined,
         },
-        onSortingChange: enableSorting ? setSorting : undefined,
-        onColumnFiltersChange: enableFilters ? setColumnFilters : undefined,
+        onSortingChange: settings.enableSorting ? setSorting : undefined,
+        onColumnFiltersChange: settings.enableFilters ? setColumnFilters : undefined,
         onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
         onColumnVisibilityChange: setColumnVisibility,
         onColumnOrderChange: setColumnOrder,
         onColumnPinningChange: setColumnPinning,
-        onGlobalFilterChange: setGlobalFilter,
+        onGlobalFilterChange: settings.enableSearch ? setGlobalFilter : undefined,
         getCoreRowModel: getCoreRowModel(),
-        getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
+        getSortedRowModel: settings.enableSorting ? getSortedRowModel() : undefined,
         getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
-        getFilteredRowModel: enableFilters ? getFilteredRowModel() : undefined,
+        getFilteredRowModel: settings.enableFilters ? getFilteredRowModel() : undefined,
         enableRowSelection,
         enableMultiRowSelection,
         columnResizeMode,
@@ -286,6 +304,26 @@ export function ExtendedGrid<T>({
                         <DropdownMenuContent align="end" className="w-[200px]">
                             <DropdownMenuLabel>Table Options</DropdownMenuLabel>
                             <DropdownMenuSeparator />
+                            {/* Add these new settings controls */}
+                            <DropdownMenuCheckboxItem
+                                checked={settings.enableSorting}
+                                onCheckedChange={(v) => setSettings({ ...settings, enableSorting: v })}
+                            >
+                                Enable Sorting
+                            </DropdownMenuCheckboxItem>
+                            <DropdownMenuCheckboxItem
+                                checked={settings.enableFilters}
+                                onCheckedChange={(v) => setSettings({ ...settings, enableFilters: v })}
+                            >
+                                Enable Filters
+                            </DropdownMenuCheckboxItem>
+                            <DropdownMenuCheckboxItem
+                                checked={settings.enableSearch}
+                                onCheckedChange={(v) => setSettings({ ...settings, enableSearch: v })}
+                                disabled={!settings.enableFilters}
+                            >
+                                Enable Search
+                            </DropdownMenuCheckboxItem>
                             {!isMobile && (
                                 <>
                                     <DropdownMenuCheckboxItem
@@ -330,11 +368,12 @@ export function ExtendedGrid<T>({
             {/* Table wrapper ---------------------------------------------- */}
             <div
                 className={cn(
-                    "flex-1 min-h-0 overflow-auto border rounded-lg relative",
+                    "flex-1 min-h-[300px] overflow-auto border rounded-lg relative",
                     bordered && "border",
                     striped && "[&_tr:nth-child(even)]:bg-muted/10",
                     hoverable && "[&_tr:hover]:bg-muted/50"
                 )}
+                style={{ maxHeight: height === "100%" ? undefined : height }}
             >
                 <Table className="w-full">
                     <TableHeader className="sticky top-0 bg-background z-10 shadow-sm border-b">
@@ -483,30 +522,88 @@ export function ExtendedGrid<T>({
             {
                 enablePagination && (
                     <div className="flex flex-col md:flex-row justify-between items-center gap-2 p-2">
-                        <div className="flex items-center space-x-2">
-                            <Button variant="outline" size="sm" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()} className="h-8 w-8 p-0"><ChevronFirst className="h-4 w-4" /></Button>
-                            <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="h-8 w-8 p-0"><ChevronLeft className="h-4 w-4" /></Button>
-                            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="h-8 w-8 p-0"><ChevronRight className="h-4 w-4" /></Button>
-                            <Button variant="outline" size="sm" onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()} className="h-8 w-8 p-0"><ChevronLast className="h-4 w-4" /></Button>
-                        </div>
-                        <div className="flex flex-col md:flex-row items-center gap-2">
-                            <span className="text-sm">Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm hidden md:inline">Go to page:</span>
-                                <Input type="number" defaultValue={table.getState().pagination.pageIndex + 1} onChange={(e) => table.setPageIndex(e.target.value ? Number(e.target.value) - 1 : 0)} className="w-16 h-8" />
-                            </div>
+                        {/* Records count on the left */}
+                        <div className="text-sm text-muted-foreground mr-3">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="sm" className="h-8">Show {table.getState().pagination.pageSize}</Button>
+                                    <Button variant="outline" size="sm" className="h-8">
+                                        Show {table.getState().pagination.pageSize}
+                                    </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     {[10, 20, 30, 40, 50].map((size) => (
-                                        <DropdownMenuItem key={size} onClick={() => table.setPageSize(size)}>
+                                        <DropdownMenuItem
+                                            key={size}
+                                            onClick={() => table.setPageSize(size)}
+                                        >
                                             Show {size}
                                         </DropdownMenuItem>
                                     ))}
                                 </DropdownMenuContent>
                             </DropdownMenu>
+                            Showing {table.getRowModel().rows.length} of{' '}
+                            {table.getFilteredRowModel().rows.length} records
+                        </div>
+
+
+                        {/* Page navigation on the right */}
+                        <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm">
+                                    Page {table.getState().pagination.pageIndex + 1} of{' '}
+                                    {table.getPageCount()}
+                                </span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm hidden md:inline">Go to:</span>
+                                    <Input
+                                        type="number"
+                                        defaultValue={table.getState().pagination.pageIndex + 1}
+                                        onChange={(e) => {
+                                            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                                            table.setPageIndex(Math.min(Math.max(page, 0), table.getPageCount() - 1));
+                                        }}
+                                        className="w-16 h-8"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => table.setPageIndex(0)}
+                                    disabled={!table.getCanPreviousPage()}
+                                    className="h-8 w-8 p-0"
+                                >
+                                    <ChevronFirst className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => table.previousPage()}
+                                    disabled={!table.getCanPreviousPage()}
+                                    className="h-8 w-8 p-0"
+                                >
+                                    <ChevronLeft className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => table.nextPage()}
+                                    disabled={!table.getCanNextPage()}
+                                    className="h-8 w-8 p-0"
+                                >
+                                    <ChevronRight className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                                    disabled={!table.getCanNextPage()}
+                                    className="h-8 w-8 p-0"
+                                >
+                                    <ChevronLast className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 )

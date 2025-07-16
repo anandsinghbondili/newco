@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ExtendedGrid from "@/components/ext/grid/ExtendedGrid";
 import { ColumnDef } from "@tanstack/react-table";
 import { Panel } from "@/components/ext/containers/Panel";
-import { showCustomToast, showSuccessToast } from "@/components/ext/window/Toaster";
+import { showCustomToast } from "@/components/ext/window/Toaster";
 
 interface Deal {
     deal_number: string;
@@ -53,12 +53,13 @@ export default function DealSummaryPage() {
             onDelete={() => console.log("Delete")}
             className="grid grid-cols-1 gap-4 p-3 h-full"
         >
-            <ExtendedGrid
-                columns={columns}
-                data={data}
-                enableFilters={false}
-                onRefresh={() => showCustomToast("info", "Info", "Refreshed data")}
-            />
+            <>
+                <ExtendedGrid
+                    columns={columns}
+                    data={data}
+                    onRefresh={() => showCustomToast("info", "Info", "Refreshed data")}
+                />
+            </>
         </Panel>
     );
 }

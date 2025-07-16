@@ -14,9 +14,19 @@ import { Button } from "../ui/button";
 import { useTheme } from "next-themes";
 import { SidebarTrigger } from "../ui/sidebar";
 import { showSuccessToast } from "../ext/window/Toaster";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
     const { setTheme } = useTheme();
+    const router = useRouter();
+
+    const handleProfile = () => {
+        router.push("/profile");
+    };
+
+    const handleSettings = () => {
+        router.push("/settings");
+    };
 
     const handleLogout = () => {
         localStorage.removeItem("user");
@@ -70,11 +80,11 @@ const Navbar = () => {
                     <DropdownMenuContent sideOffset={10}>
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleProfile}>
                             <User className="h-[1.2rem] w-[1.2rem] mr-2" />
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleSettings}>
                             <Settings className="h-[1.2rem] w-[1.2rem] mr-2" />
                             Settings
                         </DropdownMenuItem>

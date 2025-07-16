@@ -1,5 +1,5 @@
 -- Create the users table
-CREATE TABLE users (
+CREATE TABLE newco_user_profiles (
     id VARCHAR(10) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -8,10 +8,10 @@ CREATE TABLE users (
     status ENUM('active', 'inactive', 'suspended', 'pending') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB;
 
 -- Create the settings_menu table
-CREATE TABLE settings_menu (
+CREATE TABLE newco_settings_menu (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(50),
     route_id VARCHAR(50),
@@ -19,11 +19,11 @@ CREATE TABLE settings_menu (
     icon VARCHAR(50),
     parent_id INT NULL,
     display_order INT NOT NULL,
-    FOREIGN KEY (parent_id) REFERENCES settings_menu(id) ON DELETE CASCADE
-);
+    FOREIGN KEY (parent_id) REFERENCES newco_settings_menu(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- Create the navigation_menu table
-CREATE TABLE navigation_menu (
+CREATE TABLE newco_navigation_menu (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(50) NULL,
     route_id VARCHAR(50) NULL,
@@ -31,11 +31,11 @@ CREATE TABLE navigation_menu (
     icon VARCHAR(50) NULL,
     parent_id INT NULL,
     display_order INT NOT NULL,
-    FOREIGN KEY (parent_id) REFERENCES navigation_menu(id) ON DELETE CASCADE
-);
+    FOREIGN KEY (parent_id) REFERENCES newco_navigation_menu(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- Create the allSettings table
-CREATE TABLE allSettings (
+CREATE TABLE newco_all_settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NULL,
     route_id VARCHAR(50) NULL,
@@ -43,11 +43,11 @@ CREATE TABLE allSettings (
     icon VARCHAR(50) NULL,
     parent_id INT NULL,
     display_order INT NOT NULL,
-    FOREIGN KEY (parent_id) REFERENCES allSettings(id) ON DELETE CASCADE
-);
+    FOREIGN KEY (parent_id) REFERENCES newco_all_settings(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- Create the allMenu table
-CREATE TABLE allMenu (
+CREATE TABLE newco_all_menu (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NULL,
     route_id VARCHAR(50) NULL,
@@ -55,11 +55,11 @@ CREATE TABLE allMenu (
     icon VARCHAR(50) NULL,
     parent_id INT NULL,
     display_order INT NOT NULL,
-    FOREIGN KEY (parent_id) REFERENCES allMenu(id) ON DELETE CASCADE
-);
+    FOREIGN KEY (parent_id) REFERENCES newco_all_menu(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 -- Create the dealtypes table structure
-CREATE TABLE dealtypes (
+CREATE TABLE newco_dealtypes (
     id INT PRIMARY KEY,
     deal_type VARCHAR(50) NOT NULL,
     deal_type_name VARCHAR(100) NOT NULL,
@@ -67,10 +67,10 @@ CREATE TABLE dealtypes (
     active_flag ENUM('Y', 'N') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB;
 
 -- Create the divisions table structure
-CREATE TABLE divisions (
+CREATE TABLE newco_divisions (
     id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     division_code VARCHAR(50) NOT NULL,
@@ -87,11 +87,11 @@ CREATE TABLE divisions (
     accounted_currency VARCHAR(10) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (parent_division_id) REFERENCES divisions(id)
-);
+    FOREIGN KEY (parent_division_id) REFERENCES newco_divisions(id)
+) ENGINE=InnoDB;
 
 -- Create the deals table structure
-CREATE TABLE deals (
+CREATE TABLE newco_deal_headers (
     deal_id INT AUTO_INCREMENT PRIMARY KEY,
     deal_name VARCHAR(255) NOT NULL,
     deal_status_code VARCHAR(20) NOT NULL,
@@ -120,10 +120,10 @@ CREATE TABLE deals (
     INDEX idx_deal_type (deal_type_id),
     INDEX idx_vendor (vendor_id),
     INDEX idx_dates (deal_start_date, deal_end_date)
-);
+) ENGINE=InnoDB;
 
--- Create the table structure
-CREATE TABLE status_codes (
+-- Create the status_codes table structure
+CREATE TABLE newco_status_codes (
     id INT PRIMARY KEY,
     status_code VARCHAR(50) NOT NULL,
     display_value VARCHAR(100) NOT NULL,
@@ -134,5 +134,4 @@ CREATE TABLE status_codes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY unique_status (status_code, status_for)
-);
-
+) ENGINE=InnoDB;
