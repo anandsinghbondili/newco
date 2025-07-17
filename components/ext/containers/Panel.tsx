@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 
 interface PanelProps {
     title?: string
+    subtitle?: string
     onCreate?: () => void
     onEdit?: () => void
     onDelete?: () => void
@@ -19,6 +20,7 @@ interface PanelProps {
 
 export const Panel: React.FC<PanelProps> = ({
     title,
+    subtitle,
     onCreate,
     onEdit,
     onDelete,
@@ -27,10 +29,15 @@ export const Panel: React.FC<PanelProps> = ({
     children,
 }) => {
     return (
-        <Card className={cn('grid grid-cols-1 gap-4 p-3 h-full', className)}>
+        <Card className={cn('grid grid-cols-1 gap-4 p-4 h-full', className)}>
             {/* Title */}
             {title && (
-                <h2 className="text-xl font-semibold mb-1 shrink-0">{title}</h2>
+                // <h2 className="text-xl font-semibold mb-1 shrink-0">{title}</h2>
+                <h2 className='text-2xl font-bold mb-1 shrink-0'>{title}</h2>
+            )}
+            {/* Sub Title */}
+            {subtitle && (
+                <h2 className="text-xl font-semibold mb-1 shrink-0">{subtitle}</h2>
             )}
 
             {/* Tbar */}

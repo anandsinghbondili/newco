@@ -8,7 +8,19 @@ export default function Loading() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-muted/50">
             {/* Optional logo & spinner card */}
-
+            <div className="flex flex-col items-center gap-4 animate-fade-in">
+                <div className="flex items-center gap-4">
+                    {/* <Image
+                        src="/newco_logo.png"
+                        width={32}
+                        height={32}
+                        alt="Logo"
+                        className="animate-fade-in"
+                    /> */}
+                    <h1 className="text-2xl font-semibold">Loading...</h1>
+                </div>
+                {/* <Loader2 className="animate-spin" /> */}
+            </div>
         </div>
     );
 }

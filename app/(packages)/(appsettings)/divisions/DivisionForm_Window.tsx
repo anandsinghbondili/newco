@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import Window from "@/components/ext/window/Window";
 import { Button } from "@/components/ui/button";
-import { DateInput } from "@/components/ext/form/DateInput";
-import { TextInput } from "@/components/ext/form/TextInput";
-import ComboBox from "@/components/ext/form/ComboBox";
+import { DateInput } from "@/components/ext/form/fields/DateInput";
+import { TextInput } from "@/components/ext/form/fields/TextInput";
+import ComboBox from "@/components/ext/form/fields/ComboBox";
 
 interface DivisionFormProps {
     open: boolean;

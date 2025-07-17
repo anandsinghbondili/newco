@@ -1,4 +1,4 @@
-// components/ext/grid/ExtendedGrid.tsx
+// components/ext/grid/SmartGrid.tsx
 // ShadCN‑powered DataTable with TanStack Table v8 + a locked checkbox‑selection column.
 
 "use client";
@@ -58,7 +58,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/app/hooks/use-media-query";
 
-interface ExtendedGridProps<T> {
+interface SmartGridProps<T> {
     columns: ColumnDef<T, unknown>[];
     data: T[];
     title?: string;
@@ -82,7 +82,7 @@ interface ExtendedGridProps<T> {
     onRefresh?: () => void;
 }
 
-export function ExtendedGrid<T>({
+export function SmartGrid<T>({
     columns,
     data,
     title = "",
@@ -104,7 +104,7 @@ export function ExtendedGrid<T>({
     className = "",
     onRowDoubleClick,
     onRefresh,
-}: ExtendedGridProps<T>) {
+}: SmartGridProps<T>) {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     /* ------------------------------------------------------------------ */
@@ -612,4 +612,4 @@ export function ExtendedGrid<T>({
     );
 }
 
-export default ExtendedGrid;
+export default SmartGrid;

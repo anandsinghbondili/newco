@@ -1,15 +1,15 @@
 'use client';
 
-import CheckboxField from '@/components/ext/form/CheckboxField';
-import ComboBox from '@/components/ext/form/ComboBox';
-import DateInput from '@/components/ext/form/DateInput';
-import DisplayField from '@/components/ext/form/DisplayField';
-import FileUpload from '@/components/ext/form/FileUpload';
-import NumberInput from '@/components/ext/form/NumberInput';
-import RadioGroupField from '@/components/ext/form/RadioGroupField';
-import TextArea from '@/components/ext/form/TextArea';
-import TextInput from '@/components/ext/form/TextInput';
-import TimeField from '@/components/ext/form/TimeField';
+import CheckboxField from '@/components/ext/form/fields/CheckboxField';
+import ComboBox from '@/components/ext/form/fields/ComboBox';
+import DateInput from '@/components/ext/form/fields/DateInput';
+import DisplayField from '@/components/ext/form/fields/DisplayField';
+import FileUpload from '@/components/ext/form/fields/FileUpload';
+import NumberInput from '@/components/ext/form/fields/NumberInput';
+import RadioGroupField from '@/components/ext/form/fields/RadioGroupField';
+import TextArea from '@/components/ext/form/fields/TextArea';
+import TextInput from '@/components/ext/form/fields/TextInput';
+import TimeField from '@/components/ext/form/fields/TimeField';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import React from 'react'
